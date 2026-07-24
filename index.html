@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><style>html,body,#room{margin:0;height:100%;overflow:hidden;background:#111;touch-action:none} .o{position:absolute;opacity:0}#m{position:absolute;bottom:0;left:0;right:0;color:#fff;background:#222;padding:8px;font-family:sans-serif}</style></head><body><div id="room">
+<div class=o data-n="Sofa" data-a="sofa" style="left:0;top:10%;width:45%;height:30%"></div>
+<div class=o data-n="Play mat" data-a="play" style="left:25%;top:55%;width:35%;height:25%"></div>
+<div class=o data-n="Toy box" data-a="box" style="left:70%;top:45%;width:25%;height:30%"></div>
+<div class=o data-n="Mia" data-a="mia" style="left:65%;top:10%;width:25%;height:20%"></div>
+<div class=o data-n="Kitchen door" data-a="door" style="left:88%;top:0;width:12%;height:100%"></div>
+<div id=m>Explore with one finger. Double tap to interact.</div></div>
+<script>
+let last="",held="",carry=false;
+function say(t){m.textContent=t;speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(t))}
+document.addEventListener("touchmove",e=>{let t=e.touches[0],el=document.elementFromPoint(t.clientX,t.clientY);if(el&&el.dataset.n&&el.dataset.n!=last){last=el.dataset.n;say(last)}e.preventDefault()},{passive:false});
+let tap=0;
+document.addEventListener("touchend",e=>{let n=Date.now();if(n-tap<350){let t=e.changedTouches[0],el=document.elementFromPoint(t.clientX,t.clientY);if(el&&el.dataset.a){let a=el.dataset.a;
+if(a=="mia"){if(held=="Teddy"){held="";say("You give Teddy to Mia.")}else if(!carry){carry=true;say("You pick Mia up.")}else{carry=false;say("You put Mia on the floor.")}}
+else if(a=="play"){if(carry){carry=false;say("You put Mia on the play mat.")}else say("Play mat.")}
+else if(a=="box"){document.getElementById("room").innerHTML='<div class=o data-n="Teddy" data-a="teddy" style="left:10%;top:20%;width:35%;height:30%"></div><div class=o data-n="Toy car" data-a="car" style="left:55%;top:20%;width:35%;height:30%"></div><div class=o data-n="Close toy box" data-a="close" style="left:20%;top:70%;width:60%;height:20%"></div><div id=m></div>';window.m=document.getElementById("m");say("Toy box opened.")}
+else if(a=="teddy"){held="Teddy";say("You are holding Teddy.")}
+else if(a=="car"){held="Toy car";say("You are holding Toy car.")}
+else if(a=="close"){location.reload()}
+else if(a=="door"){say(carry?"You enter the kitchen carrying Mia.":"You enter the kitchen.")}
+}}tap=n;e.preventDefault()},{passive:false});
+</script></body></html>
